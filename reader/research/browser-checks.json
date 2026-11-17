@@ -1,0 +1,24 @@
+{
+  "reader": "PC-01",
+  "date": "2026-11-18",
+  "browser_checks": {
+    "languages_ru_en": "PASS",
+    "recorded_cases": 7,
+    "strict_statuses": "PASS",
+    "repeat_write_rejected": "PASS",
+    "keyboard_space_records_slot": "PASS",
+    "finite_comparison_in_browser": 106496,
+    "copy_capsule": "PASS",
+    "download_capsule": "PASS",
+    "download_standalone_html": "PASS",
+    "horizontal_overflow_actual_widths": [
+      346,
+      746
+    ]
+  },
+  "limitations": {
+    "saved_file_browser_open": "NOT_RUN: automation policy blocks file protocol; downloaded HTML validated statically",
+    "print_dialog": "NOT_RUN"
+  },
+  "background": "Existing author artwork from MI-01, unchanged embedded JPEG; source https://chertogi-razuma-research.kernelpanic888.chatgpt.site/readers/mirror-interface/"
+}

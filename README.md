@@ -8,6 +8,10 @@ A local companion for people learning Lean, building formal specifications, or t
 
 [Русская документация и назначение](docs/README_RU.md) · [Install and deployment](docs/INSTALL.md) · [CLI reference](docs/CLI.md) · [Architecture](docs/ARCHITECTURE.md) · [Trust and limitations](SECURITY.md) · [Release evidence](docs/VALIDATION.md) · [Roadmap](docs/ROADMAP.md)
 
+## Independent reader
+
+[PC-01: self-contained RU/EN reader](reader/README.md) includes the explanation, installation, recorded-check explorer, Lean capsule, and an exhaustive scorecard lab in one downloadable HTML. It is a documentation addition checked separately from the alpha verifier release.
+
 ## Why use it?
 
 A convincing-looking answer can prove the wrong statement, use an undeclared assumption, or fail to compile. This companion keeps the original theorem header, submits only a proof term, compiles it with Lean, audits the resulting theorem with `Lean.collectAxioms`, and saves each attempt in a separate directory.

@@ -1,0 +1,21 @@
+name: Independent reader checks
+on:
+  push:
+    paths: ['reader/**', '.github/workflows/reader.yml']
+  pull_request:
+    paths: ['reader/**', '.github/workflows/reader.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Build the standalone reader without network dependencies
+        run: python3 reader/build.py
+      - name: Verify exhaustive transitions and standalone boundary
+        run: node reader/check.cjs
+      - name: Check generated HTML is current
+        run: git diff --exit-code -- reader/dist/index.html

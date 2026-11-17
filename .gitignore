@@ -13,3 +13,5 @@ adapters/
 .DS_Store
 .venv-mlx/
 local-mlx-environment.txt
+!reader/dist/
+!reader/dist/index.html
