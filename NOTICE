@@ -1,0 +1,11 @@
+Lean Proof Companion
+Copyright 2026 Salkutsan Aleksey
+
+The verifier was extracted and modified from the candidate-v2 remediation work
+for the author's DeepSeek Prover V2 / TMI Lean project. This distribution
+repackages the trusted Lean inspector and Python pipeline with a standalone CLI,
+regression harness, process cleanup, documentation and explicit release limits.
+
+Lean is an external dependency, not redistributed here.
+Optional MLX libraries and model weights have their own licenses.
+No model weights, chat archives, author images or working adapters are included.

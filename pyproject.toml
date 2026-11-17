@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lean-proof-companion"
+version = "0.1.0a1"
+description = "A local Lean 4 proof companion with fixed statements, axiom audits and replayable evidence"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [{name = "Salkutsan Aleksey"}]
+dependencies = []
+classifiers = ["Development Status :: 3 - Alpha", "Operating System :: MacOS", "Programming Language :: Python :: 3"]
+
+[project.scripts]
+lean-proof-companion = "lean_proof_companion.cli:main"
+
+[tool.setuptools]
+packages = ["lean_proof_companion"]
+
+[tool.setuptools.package-data]
+lean_proof_companion = ["LeanTool.lean"]

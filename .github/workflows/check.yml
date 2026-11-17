@@ -1,0 +1,41 @@
+name: Model-free verifier checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verifier:
+    runs-on: macos-14
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Install Elan v4.3.0
+        shell: bash
+        run: |
+          arch="$(uname -m)"
+          if [ "$arch" = arm64 ]; then arch=aarch64; fi
+          curl --fail --location --silent --show-error "https://github.com/leanprover/elan/releases/download/v4.3.0/elan-${arch}-apple-darwin.tar.gz" -o "$RUNNER_TEMP/elan.tar.gz"
+          mkdir "$RUNNER_TEMP/elan"
+          tar -xzf "$RUNNER_TEMP/elan.tar.gz" -C "$RUNNER_TEMP/elan"
+          "$RUNNER_TEMP/elan/elan-init" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Install package in a fresh environment
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e .
+      - name: Run model-free acceptance and negative controls
+        run: |
+          . .venv/bin/activate
+          ./scripts/check.sh
+      - name: Retain evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: model-free-evidence
+          path: runs/
+          retention-days: 14

@@ -1,0 +1,6 @@
+include lean-toolchain lakefile.lean lake-manifest.json .python-version
+include LICENSE NOTICE README.md CHANGELOG.md CONTRIBUTING.md SECURITY.md requirements-mlx.txt
+recursive-include docs *.md
+recursive-include examples *.lean *.proof
+recursive-include scripts *.sh
+recursive-include tests *.py
