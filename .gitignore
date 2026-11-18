@@ -15,3 +15,6 @@ adapters/
 local-mlx-environment.txt
 !reader/dist/
 !reader/dist/index.html
+
+.local-dialog.json
+!reader/dist/public-reader.html

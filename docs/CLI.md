@@ -53,3 +53,11 @@ runs/
 Failed candidates may have no compile or inspection artifact. That never yields acceptance. Parsing and model manifests live alongside attempt directories. `latest.json` changes with each run and is not an archive. Keep the referenced directory and the model manifest when exporting evidence.
 
 The saved TaskSpec can include a reference field; it is local provenance, not part of task identity and not sent to the generator. Avoid exporting private theorem sources without reviewing them.
+
+## Local dialogue preview (current main)
+
+- `serve [--model DIR] [--port 8765] [--no-open]` serves the reader and chat on 127.0.0.1 only.
+- `ask [--model DIR] "question"` asks the separate dialogue model once.
+- `chat [--model DIR]` starts a terminal conversation (`/exit`, `/reset`).
+
+Model defaults and the launcher interpreter can be configured in the ignored `.local-dialog.json`. The launcher `start-reader.sh` opens the local reader, not a public model server. Model responses have `lean_status: NOT_RUN`; repetition guards stop periodic garbage but are not semantic validation. See LOCAL_CHAT_RU.md.

@@ -34,12 +34,49 @@ def parser():
     test=commands.add_parser('selftest',help='Run model-free Lean and negative-control regressions')
     test.add_argument('--project',type=Path,default=CORE)
     test.add_argument('--runs',type=Path,default=Path('runs/selftest'))
+    serve=commands.add_parser('serve',help='Open the reader with a loopback-only local chat')
+    serve.add_argument('--model',type=Path)
+    serve.add_argument('--project',type=Path,default=CORE)
+    serve.add_argument('--runs',type=Path,default=Path('runs/local-reader'))
+    serve.add_argument('--port',type=int,default=8765)
+    serve.add_argument('--no-open',action='store_true')
+    for name in ['ask','chat']:
+        c=commands.add_parser(name,help='Ask the dialogue model (not Lean verified)')
+        c.add_argument('--model',type=Path)
+        c.add_argument('--runs',type=Path,default=Path('runs/dialogue'))
+        c.add_argument('--max-tokens',type=int,default=512)
+        if name=='ask':c.add_argument('question')
     return p
 
 
 def main(argv=None):
     args=parser().parse_args(argv)
     try:
+        if args.command=='serve':
+            from .service import serve
+            if not 1024<=args.port<=65535:raise ValueError('Use a port from 1024 to 65535')
+            serve(args);return 0
+        if args.command in ('ask','chat'):
+            from .dialogue import Dialogue,local_config
+            model=args.model or local_config().get('chat_model')
+            if not model:raise ValueError('Set --model or .local-dialog.json')
+            dialogue=Dialogue(model,args.runs)
+            if args.command=='ask':
+                result=dialogue.ask(args.question,max_tokens=args.max_tokens)
+                print(result['answer']);print('\n[Диалоговая модель · Lean: NOT_RUN]')
+                return 1 if result['finish_reason']=='repetition' else 0
+            print('Локальный диалог. /exit — выход, /reset — очистить контекст. Ответы не проверены Lean.')
+            history=[]
+            while True:
+                try:question=input('Ты > ').strip()
+                except (EOFError,KeyboardInterrupt):print();return 0
+                if question=='/exit':return 0
+                if question=='/reset':history=[];continue
+                if not question:continue
+                result=dialogue.ask(question,history[-10:],args.max_tokens)
+                print('Помощник > '+result['answer']+'\n[Lean: NOT_RUN]')
+                if result['finish_reason']!='repetition':history.extend([{'role':'user','content':question},{'role':'assistant','content':result['answer']}])
+            return 0
         if args.command=='doctor':
             report={'python':sys.version.split()[0],'platform':platform.system(),'version':__version__,
                     'sandbox_available':Path('/usr/bin/sandbox-exec').is_file()}

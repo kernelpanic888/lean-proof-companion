@@ -4,13 +4,23 @@
 
 A local companion for people learning Lean, building formal specifications, or testing proof-generating models. It separates the model's suggestion from the verifier's decision and reports which axioms a proof depends on.
 
-**Status: v0.1.0-alpha.1 — research prerelease.** The verifier and model-free examples have release checks. Base and LoRA generation were smoke-tested locally on one toy target; the MLX integration remains experimental; training and independent model benchmarking are outside this release. This release does not close the parent project's 18-item remediation plan.
+**Status: research alpha.** The published v0.1.0-alpha.1 remains a frozen verifier snapshot. Current `main` adds an optional local dialogue preview inside the reader: Qwen handles conversation, DeepSeek handles proof proposals, and Lean makes the separate proof decision. Parent R01–R18 acceptance remains incomplete.
 
 [Русская документация и назначение](docs/README_RU.md) · [Install and deployment](docs/INSTALL.md) · [CLI reference](docs/CLI.md) · [Architecture](docs/ARCHITECTURE.md) · [Trust and limitations](SECURITY.md) · [Release evidence](docs/VALIDATION.md) · [Roadmap](docs/ROADMAP.md)
 
 ## Independent reader
 
 [PC-01: self-contained RU/EN reader](reader/README.md) includes the explanation, installation, recorded-check explorer, Lean capsule, and an exhaustive scorecard lab in one downloadable HTML. It is a documentation addition checked separately from the alpha verifier release.
+
+## Chat inside the local reader
+
+```sh
+./start-reader.sh
+```
+
+After local configuration, this opens `http://127.0.0.1:8765/#chat`. The service checks model loading, chat formatting, a short generation and Lean availability. Keep its terminal open; Ctrl+C stops it. Questions and history remain local. Dialogue output is always labelled unverified; a separate, visible statement is required before Lean checking or DeepSeek proof generation.
+
+Setup: [local chat guide in Russian](docs/LOCAL_CHAT_RU.md). An optional Qwen3-4B-Instruct-2507-4bit model is separate from DeepSeek and LoRA; no weights are shipped. The public reader has no automatic connection to a visitor's computer and offers a link to the explicitly started local reader.
 
 ## Why use it?
 

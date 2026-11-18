@@ -1,6 +1,6 @@
 # PC-01 · Lean Proof Companion reader
 
-Self-contained RU/EN research reader. Open `dist/index.html` in a browser; its styles, scripts, author background, Lean capsule, seven recorded-check snapshots, release passport and all 106,496 Lean-exported reference transitions are embedded. Reading and local interactions do not require a server or network. Installing Lean or downloading model dependencies is a separate online step.
+Self-contained RU/EN research reader. Open `dist/index.html` in a browser; its styles, scripts, author background, Lean capsule, seven recorded-check snapshots and a local-chat panel, release passport and all 106,496 Lean-exported reference transitions are embedded. The recorded labs need no network. Live dialogue requires the explicitly started local service; the public build omits network API code. Installing Lean or downloading model dependencies is a separate online step.
 
 The page explains why a proof companion is useful, its trust boundaries, local installation, optional model generation and the published alpha release. It includes a small scorecard lab and four Lean-checked theorems. The lab does not claim to verify the complete MG-01 engine or model quality. Lean is not executed in the browser.
 
@@ -18,3 +18,7 @@ To recheck the four proof bodies, use the released companion on `research/Scorec
 The embedded author artwork is inherited from the author's MI-01 reader without modifying the JPEG bytes. No new portrait or replacement art was generated. Layout uses the established green/gold palette, serif headings and monospaced technical notation. System fonts only; no CDN, iframe, fetch, external runtime or telemetry.
 
 Published tool release: https://github.com/kernelpanic888/lean-proof-companion/releases/tag/v0.1.0-alpha.1 . This reader is a separately versioned documentation addition; it does not retroactively change that release's verifier checks. The parent R01–R18 remediation remains NEEDS_REWORK.
+
+## Live local chat
+
+Run `../start-reader.sh` from this source checkout after configuring the optional dialogue weights. `dist/index.html` is the local profile; `dist/public-reader.html` is the public, no-network-API profile. Both are generated from the same template and include the complete reader. No cloud endpoint accepts or forwards a visitor's chat.

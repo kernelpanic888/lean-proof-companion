@@ -27,3 +27,9 @@ UUID directories avoid accidental overwrite. SHA-256 manifests and a result seal
 ## Reporting
 
 Report non-sensitive issues in the repository issue tracker. For a vulnerability that could expose local data, use GitHub's private vulnerability reporting if enabled; otherwise request a private contact without posting exploit data or credentials. No response-time or production support guarantee is provided.
+
+## Local reader service (current main)
+
+`serve` binds only 127.0.0.1. POST operations require an exact loopback Host, matching Origin and per-launch session token injected into the local HTML. No CORS access is granted. Do not expose it through a tunnel or an external bind. The model is text-only and has no execution tools. Proof execution is a separate user action on a reviewed trusted task. The reader export removes the session token and visible conversation. Local chat logs contain questions and responses under runs/ and should remain private.
+
+The public reader build omits network API code entirely. The local build enables only same-origin API requests. This is a local research preview, not an externally audited multi-user service. Protect the host account and trust the Lean context as described above.
