@@ -1,5 +1,5 @@
 """Loopback-only reader and chat service. Models have no execution tools."""
-import concurrent.futures,gc,json,secrets,subprocess,threading,time,webbrowser,os
+import concurrent.futures,gc,json,secrets,subprocess,threading,time,webbrowser,os,urllib.request,urllib.error
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 from .core import ROOT,CORE,LeanWorker,atomic
@@ -24,7 +24,7 @@ class Service:
             if probe.get('errors'):raise RuntimeError('Lean startup probe failed')
         except Exception as e:self.lean=None;self.lean_error=str(e)
     def health(self):
-        return {'status':'loading' if not self.ready.done() else 'error' if self.error else 'ready','model':self.model.name,'model_ready':self.dialogue is not None,'lean_ready':self.lean is not None,'lean_version':self.lean.version if self.lean else None,'deepseek_configured':bool(self.prover_model and Path(self.prover_model).is_dir()),'error':self.error,'lean_error':self.lean_error,'busy':self.busy.locked()}
+        return {'service':'lean-proof-companion','protocol_version':1,'status':'loading' if not self.ready.done() else 'error' if self.error else 'ready','model':self.model.name,'model_ready':self.dialogue is not None,'lean_ready':self.lean is not None,'lean_version':self.lean.version if self.lean else None,'deepseek_configured':bool(self.prover_model and Path(self.prover_model).is_dir()),'error':self.error,'lean_error':self.lean_error,'busy':self.busy.locked()}
     def task(self,data):
         if not self.lean:raise ValueError('Lean не готов: '+str(self.lean_error))
         source=data.get('source');name=data.get('name')
@@ -67,8 +67,16 @@ def serve(args):
     if not model:raise ValueError('Укажи --model или настрой .local-dialog.json')
     reader=ROOT/'reader/dist/index.html'
     if not reader.is_file():raise ValueError('Ридер не собран: python3.11 reader/build.py')
-    service=Service(model,args.project,args.runs,config.get('prover_model'),config.get('adapter'))
     token=secrets.token_urlsafe(32);origin='http://127.0.0.1:'+str(args.port)
+    try:
+        opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with opener.open(origin+'/api/health',timeout=1) as response:existing=json.load(response)
+        compatible=existing.get('service')=='lean-proof-companion' or {'model_ready','lean_ready','deepseek_configured','lean_version'}<=set(existing)
+        if compatible:
+            print('Локальный ридер уже работает: '+origin+'/#chat',flush=True)
+            if not args.no_open:webbrowser.open(origin+'/#chat')
+            return
+    except (OSError,ValueError):pass
     class Handler(BaseHTTPRequestHandler):
         def log_message(self,*args):pass
         def allowed_host(self):return self.headers.get('Host')=='127.0.0.1:'+str(args.port)
@@ -109,6 +117,7 @@ def serve(args):
                 if 'future' not in locals():service.busy.release()
                 self.response(500,{'error':str(e),'accepted':False})
     server=ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
+    service=Service(model,args.project,args.runs,config.get('prover_model'),config.get('adapter'))
     print('Ридер с локальным чатом: '+origin,flush=True)
     if not args.no_open:webbrowser.open(origin+'/#chat')
     try:server.serve_forever()
