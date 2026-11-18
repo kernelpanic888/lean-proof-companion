@@ -45,3 +45,5 @@ python -m lean_proof_companion chat --model /path/to/dialogue-model
 ```
 
 `/exit` завершает диалог, `/reset` очищает контекст. Это диалоговая Qwen, а не DeepSeek/LoRA. Для проверяемого доказательства остаётся `prove` или отдельная кнопка Lean в ридере.
+
+[Какая модель на чём обучена](MODELS_RU.md) · [Фактические проверки текущего чата](LOCAL_CHAT_VALIDATION.md).
